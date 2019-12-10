@@ -1,0 +1,48 @@
+---
+- name: Deploy ansible cronjob to leaf01 and leaf02
+  hosts: leaf01
+  become: yes
+  gather_facts: no
+ 
+  tasks: 
+  - name: Install dependencies
+    package:
+      pkg: "{{ item }}"
+      state: present
+    with_items:
+#      - "build-essential"
+#      - "python-dev"
+#      - "git"
+      - "python-pip"
+
+  - name: pip install virtualenv
+    pip:
+      name: virtualenv
+
+  - name: pip install ansible into /var/ansible-cronjob/venv
+    pip:
+      name: ansible
+      virtualenv: /var/ansible-cronjob/venv
+
+
+  - name: pip  install pyyaml  into /var/ansible-cronjob/venv
+    pip:
+      name: pyyaml==5.2
+      virtualenv: /var/ansible-cronjob/venv
+  - name: Copy ansible-project to /var/ansible-cronjob
+    copy:
+      src: ./ansible-project/
+      dest: /var/ansible-cronjob/
+
+  - name: Copy ansible.cfg
+    copy:
+      src: ./ansible.cfg
+      dest: ~/.ansible.cfg
+
+  - name: Set up cron for checking whether routes are healthy
+    cron:
+      name: "health-checker"
+      minute: "*/8"
+      job: "/var/ansible-cronjob/venv/bin/ansible-playbook /var/ansible-cronjob/check-routes-health.yml"
+    when: inventory_hostname == "leaf01"
+

@@ -1,0 +1,62 @@
+net del all
+net add time zone Etc/UTC
+net add time ntp server 0.cumulusnetworks.pool.ntp.org iburst
+net add time ntp server 1.cumulusnetworks.pool.ntp.org iburst
+net add time ntp server 2.cumulusnetworks.pool.ntp.org iburst
+net add time ntp server 3.cumulusnetworks.pool.ntp.org iburst
+net add time ntp source eth0
+net add snmp-server listening-address localhost
+net add routing defaults datacenter
+net add routing service integrated-vtysh-config
+net add routing log syslog informational
+net add dns nameserver ipv4 192.168.1.1
+net add ptp global slave-only no
+net add ptp global priority1 255
+net add ptp global priority2 255
+net add ptp global domain-number 0
+net add ptp global logging-level 5
+net add ptp global path-trace-enabled no
+net add ptp global use-syslog yes
+net add ptp global verbose no
+net add ptp global summary-interval 0
+net add ptp global time-stamping
+net add bridge bridge ports swp2,swp3,swp1
+net add bridge bridge vids 40
+net add bridge bridge vlan-aware
+net add interface eth0 ip address 192.168.1.81/24
+net add interface eth0 ip gateway 192.168.1.1
+net add interface swp1 bridge access 40
+net add interface swp2-3
+net add vlan 40 ip address 172.21.115.1/24
+net add vlan 40 ipv6 address 2002:c023:9c17:6200::1/116
+net add vlan 40 vlan-id 40
+net add vlan 40 vlan-raw-device bridge
+net add vlan 40 vrf VRF_I
+net add vrf VRF_I,VRF_Q vrf-table auto
+net add hostname leaf01
+net add dot1x radius accounting-port 1813
+net add dot1x radius authentication-port 1812
+net add dot1x eap-reauth-period 0
+net add dot1x mab-activation-delay 30
+net commit
+
+# There are some configuration commands that are not yet supported by nclu.
+# The following will append those commands to the appropriate files.
+# ========================================================================
+sudo sh -c "printf 'username cumulus nopassword\n' >> /etc/frr/frr.conf"
+sudo sh -c "printf 'vrf VRF_I\n  ip route 192.168.1.0/24 VRF_Q nexthop-vrf VRF_Q\n' >> /etc/frr/frr.conf"
+sudo sh -c "printf 'vrf VRF_I\n  ip route 2002:c023:9c17:1001::1000/116 VRF_Q nexthop-vrf VRF_Q\n' >> /etc/frr/frr.conf"
+sudo sh -c "printf 'vrf VRF_I\n  ip route 172.21.114.65/32 172.21.115.2\n' >> /etc/frr/frr.conf"
+sudo sh -c "printf 'vrf VRF_I\n  ip route 172.21.114.65/32 172.21.115.10\n' >> /etc/frr/frr.conf"
+sudo sh -c "printf 'vrf VRF_I\n  ip route 172.21.114.65/32 172.21.115.11\n' >> /etc/frr/frr.conf"
+sudo sh -c "printf 'vrf VRF_I\n  ip route 172.21.114.65/32 172.21.115.13\n' >> /etc/frr/frr.conf"
+sudo sh -c "printf 'vrf VRF_I\n  ip route 2002:c023:9c17:6700::56/128 2002:c023:9c17:6200::62\n' >> /etc/frr/frr.conf"
+sudo sh -c "printf 'vrf VRF_I\n  ip route 2002:c023:9c17:6700::56/128 2002:c023:9c17:6200::63\n' >> /etc/frr/frr.conf"
+sudo sh -c "printf 'vrf VRF_I\n  ip route 2002:c023:9c17:6700::56/128 2002:c023:9c17:6200::64\n' >> /etc/frr/frr.conf"
+sudo sh -c "printf 'vrf VRF_I\n  ip route 2002:c023:9c17:6700::56/128 2002:c023:9c17:6200::65\n' >> /etc/frr/frr.conf"
+sudo sh -c "printf 'vrf VRF_I\n  exit-vrf\n' >> /etc/frr/frr.conf"
+sudo sh -c "printf 'vrf VRF_Q\n  ip route 172.21.114.65/32 VRF_I nexthop-vrf VRF_I\n' >> /etc/frr/frr.conf"
+sudo sh -c "printf 'vrf VRF_Q\n  ip route 2002:c023:9c17:6700::56/128 VRF_I nexthop-vrf VRF_I\n' >> /etc/frr/frr.conf"
+sudo sh -c "printf 'vrf VRF_Q\n  exit-vrf\n' >> /etc/frr/frr.conf"
+root@leaf01:~#
+

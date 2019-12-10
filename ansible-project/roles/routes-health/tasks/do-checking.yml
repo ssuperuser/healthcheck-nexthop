@@ -1,0 +1,36 @@
+---
+- name: moving old stats to different file
+  command: mv nexthop-stats.txt nexthop-stats.txt-old
+
+- name: pinging all the required next-hops 
+  script: test.py {{ item.next_hop }} {{ item.vrf }} # if the second argument is not provided then default is 'lo'
+  args:
+    executable: python3
+  with_items: "{{ routes|unique(attribute='next_hop') }}"
+  when: item.check_healthy == true
+  register: healthy # we are going to create a jinja2 template using these results
+
+#- name: print the healthroutes
+#  debug:
+#   msg: " {{ healthy }} "
+#  no_log: True
+
+- name: recording currently pingable next-hops IPs
+  template: src=nexthop-stats.j2 dest=/var/ansible-cronjob/nexthop-stats.txt
+
+- name: diff next hop active now vs last time 
+  command: diff nexthop-stats.txt nexthop-stats.txt-old
+  register: diffresults
+  args:
+    executable: /bin/bash
+  ignore_errors: yes
+
+- name: configure /etc/frr/frr.conf since active next-hop ips have changed
+  template: src=frr.j2 dest=/etc/frr/frr.conf
+  notify: Reload frr daemon
+  when: diffresults.stdout != ""
+
+#- name: Summary
+#  debug:
+#    var: healthy['results']|selectattr('stdout_lines')|list|length
+#    var: healthy['results']|map(attribute='stdout_lines')|list

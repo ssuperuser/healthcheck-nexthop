@@ -1,0 +1,116 @@
+default_route: "172.21.115.224"
+default_route2: "172.21.115.1"
+
+routes:
+  - vrf: "VRF_I"
+    dest: "192.168.1.0/24"
+    next_hop: "VRF_Q"
+    nexthop_vrf: "VRF_Q"
+    check_healthy: false
+
+  - vrf: "VRF_Q"
+    dest: "172.21.114.65/32"
+    next_hop: "VRF_I"
+    nexthop_vrf: "VRF_I"
+    check_healthy: false
+
+  - vrf: "VRF_I"
+    dest: "2002:c023:9c17:1001::1000/116"
+    next_hop: "VRF_Q"
+    nexthop_vrf: "VRF_Q"
+    check_healthy: false
+
+  - vrf: "VRF_Q"
+    dest: "2002:c023:9c17:6700::56/128"
+    next_hop: "VRF_I"
+    nexthop_vrf: "VRF_I"
+    check_healthy: false
+
+  - vrf: "VRF_I"
+    dest: "172.21.114.65/32"
+    next_hop: "172.21.115.2"
+    nexthop_vrf: ""
+    check_healthy: true
+
+  - vrf: "VRF_I"
+    dest: "172.21.114.65/32"
+    next_hop: "172.21.115.3"
+    nexthop_vrf: ""
+    check_healthy: true
+
+  - vrf: "VRF_I"
+    dest: "172.21.114.65/32"
+    next_hop: "172.21.115.4"
+    nexthop_vrf: ""
+    check_healthy: true
+
+  - vrf: "VRF_I"
+    dest: "2002:c023:9c17:6700::56/128"
+    next_hop: "2002:c023:9c17:6200::2"
+    nexthop_vrf: ""
+    check_healthy: true
+
+  - vrf: "VRF_I"
+    dest: "2002:c023:9c17:6700::56/128"
+    next_hop: "2002:c023:9c17:6200::3"
+    nexthop_vrf: ""
+    check_healthy: true
+
+  - vrf: "VRF_I"
+    dest: "2002:c023:9c17:6700::56/128"
+    next_hop: "2002:c023:9c17:6200::4"
+    nexthop_vrf: ""
+    check_healthy: true
+
+#############################################################
+#######            Bellow are fake routs            #########
+#############################################################
+
+  - vrf: "VRF_I"
+    dest: "172.21.114.65/32"
+    next_hop: "172.21.115.10"
+    nexthop_vrf: ""
+    check_healthy: true
+
+  - vrf: "VRF_I"
+    dest: "172.21.114.65/32"
+    next_hop: "172.21.115.11"
+    nexthop_vrf: ""
+    check_healthy: true
+
+  - vrf: "VRF_I"
+    dest: "172.21.114.65/32"
+    next_hop: "172.21.115.12"
+    nexthop_vrf: ""
+    check_healthy: true
+
+  - vrf: "VRF_I"
+    dest: "172.21.114.65/32"
+    next_hop: "172.21.115.13"
+    nexthop_vrf: ""
+    check_healthy: true
+
+  - vrf: "VRF_I"
+    dest: "2002:c023:9c17:6700::56/128"
+    next_hop: "2002:c023:9c17:6200::62"
+    nexthop_vrf: ""
+    check_healthy: true
+
+  - vrf: "VRF_I"
+    dest: "2002:c023:9c17:6700::56/128"
+    next_hop: "2002:c023:9c17:6200::63"
+    nexthop_vrf: ""
+    check_healthy: true
+
+  - vrf: "VRF_I"
+    dest: "2002:c023:9c17:6700::56/128"
+    next_hop: "2002:c023:9c17:6200::64"
+    nexthop_vrf: ""
+    check_healthy: true
+
+  - vrf: "VRF_I"
+    dest: "2002:c023:9c17:6700::56/128"
+    next_hop: "2002:c023:9c17:6200::65"
+    nexthop_vrf: ""
+    check_healthy: true
+

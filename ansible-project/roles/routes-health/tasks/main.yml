@@ -1,0 +1,26 @@
+---
+- name: Checking if default route 1 is active
+  script: test.py {{ default_route }} VRF_I # if the second argument is not provided then default is 'lo'
+  args:
+    executable: python3
+  register: def_r1_health # if not healthy we don't run next task
+#- name: check value of def_r1_health
+#  debug:
+#    msg: " {{ def_r1_health }} "
+- name: Checking if default route 2 is active 
+  script: test.py {{ default_route2 }} VRF_I # if the second argument is not provided then default is 'lo'
+  args:
+    executable: python3
+  register: def_r2_health # if not healthy we don't run next task
+  when: def_r1_health.stdout_lines[-1] != "alive" 
+#- name: check value of def_r2_health
+#  debug:
+#    msg: " {{ def_r2_health }} "
+- name: We will stop if all default route checks fail 
+  debug:
+    msg: " stopping cannot default route {{ default_route }} and {{ default_route2 }} in VRF_Q "
+  when: def_r1_health.stdout_lines[-1] != "alive" and def_r2_health.stdout_lines[-1] != "alive"
+ 
+- name: Now checking the next-hop ip addresses, since default route check is good
+  include_tasks: do-checking.yml
+  when: def_r1_health.stdout_lines[-1] == "alive" or def_r2_health.stdout_lines[-1] == "alive"  ## this is output received from running test.py

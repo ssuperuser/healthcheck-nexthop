@@ -1,0 +1,18 @@
+default_route: 172.21.115.224
+default_route2: 172.21.115.1
+routes:
+-   check_healthy: 'FALSE'
+    dest: 0.0.0.0/0
+    next_hop: VRF_Q
+    next_hop_vrf: VRF_Q
+    vrf: VRF_I
+-   check_healthy: 'null'
+    dest: route
+    next_hop: 112.21.134.45/32
+    next_hop_vrf: VRF_I
+    vrf: 172.21.115.18
+-   check_healthy: 'TRUE'
+    dest: 2002:c0:9c:61::56/128
+    next_hop: 2002:c23:97:6200::102
+    next_hop_vrf: 'null'
+    vrf: VRF_I

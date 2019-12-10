@@ -1,0 +1,6 @@
+ip route 0.0.0.0/0 VRF_Q VRF_I VRF_Q FALSE
+ ip route 112.21.134.45/32 172.21.115.18 VRF_I null TRUE
+ipv6 route 2002:c0:9c:61::56/128 2002:c23:97:6200::102 VRF_I null TRUE
+ipv6 route 2002:c0:9c:61::56/128 2002:c23:97:6200::103 VRF_I null TRUE
+ipv6 route ::/0 VRF_Q VRF_I VRF_Q FALSE
+ip route 0.0.0.0/0 VRF_Q VRF_PS VRF_Q FALSE

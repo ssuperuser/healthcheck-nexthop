@@ -1,0 +1,9 @@
+{# the following FOR block fills in the healthy_routes list #}
+{%- for route in healthy['results'] -%}
+        {% if route.stdout_lines is defined and route.stdout_lines[-1] == "alive" -%}
+{{ route.item.next_hop }} 
+{# below are next-hop routes we never check #}
+        {%- elif route.item.check_healthy == false -%}
+        {%- endif -%}
+{%- endfor -%}
+

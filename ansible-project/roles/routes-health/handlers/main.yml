@@ -1,0 +1,4 @@
+- name: Reload frr daemon
+  service:
+    name: frr
+    state: reloaded
