@@ -27,7 +27,7 @@ def get_routes():
                 'dest': str(word_list[2]),
                 'next_hop': str(word_list[3]),
                 'vrf': str(word_list[4]),
-                'next_hop_vrf': str(word_list[5]),
+                'nexthop_vrf': str(word_list[5]),
                 'check_healthy': str(word_list[6])
             })
     return routes
