@@ -1,4 +1,3 @@
-### PART 1 checking if the next hop is healthy 
 {% set healthy_routes = [] %}
 {# the following FOR block fills in the healthy_routes list #}
 {% for route in healthy['results'] %}
@@ -17,17 +16,17 @@ service integrated-vtysh-config
 !
 log syslog informational
 !
-### PART 2 now for all the next-hops that are healthy, we going to configure those routes 
 {% if healthy_routes|length > 0 -%}
-{%      for vrf in routes|unique(attribute='vrf') %}
+{%      for vrf in routes|unique(attribute='vrf')|sort(attribute='vrf') %}
 vrf {{ vrf.vrf }}
-{%          for next_hop in routes|selectattr("vrf", "equalto", vrf.vrf)%}
+{%          for next_hop in routes|sort(attribute='next_hop')|sort(attribute='dest')|selectattr("vrf", "equalto", vrf.vrf) %}
 {%              if next_hop.next_hop in healthy_routes %}
- ip route {{ next_hop.dest }} {{ next_hop.next_hop }}
+{#- the following line bellow checks whether ipv4 or ipv6 -#}
+{%              if next_hop.dest|ipv4 %}{% set ip = "ip" %}{% else %}{% set ip = "ipv6" %}{% endif %}
+ {{ip}} route {{ next_hop.dest }} {{ next_hop.next_hop }}
 {%-                 if next_hop.nexthop_vrf != "" %} nexthop-vrf {{ next_hop.nexthop_vrf }}
 {%                  else %}
 {#  bellow we are going to add a new line if there is no nexthop-vrf #}
-
 {%                  endif %}
 {%              endif %}
 {%          endfor %}

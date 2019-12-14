@@ -3,32 +3,31 @@
 import os
 import yaml
 
-print ('NOTE:');
-#print('converts static routes from txt file to json format')
-print ('remove the leading spaces in staticroutes.txt file, for each route ')
-
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROUT_TXT = os.path.join(BASE_DIR, 'staticroutes.txt')
 STATIC_ROUT_YAML = os.path.join(BASE_DIR, 'staticroutes.yml')
-
+print (' make sure all leading spaces are removed from each route, and no extra spaces at the end of staticroutes.txt file')
 
 def get_routes():
     routes = []
     with open(STATIC_ROUT_TXT) as fh:
         for line in fh.readlines():
-            word_list = [w.strip() for w in line.split(' ')]
+            word_list = [w.strip() for w in line.strip().split(' ')]
+            print (word_list)
             if str(word_list[5]).startswith('null'):
-                word_list[5]= '';
-            if str(word_list[6]).startswith('null'):
-                word_list[5]= '';
-            word_list[6]=str(word_list[6]).replace("\n",'')
+                word_list[5]='';
+            else: word_list[5]=str( word_list[5]);
+            if str(word_list[6]).startswith('TRUE'):
+                word_list[6]=True
+            else:
+                word_list[6]=False
             routes.append({
-                'dest': str(word_list[2]),
-                'next_hop': str(word_list[3]),
-                'vrf': str(word_list[4]),
-                'nexthop_vrf': str(word_list[5]),
-                'check_healthy': str(word_list[6])
+                'dest': word_list[2],
+                'next_hop': word_list[3],
+                'vrf': word_list[4],
+                'nexthop_vrf':word_list[5],
+                'check_healthy': word_list[6]
             })
     return routes
 
@@ -69,3 +68,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
