@@ -1,3 +1,4 @@
+#
 net del all
 net add time zone Etc/UTC
 net add time ntp server 0.cumulusnetworks.pool.ntp.org iburst
