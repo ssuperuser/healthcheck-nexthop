@@ -30,9 +30,9 @@ staticroutes-to-json.py, is used to convert your routes into JSON format, use st
 1. $ Login into the switch
 1. $  `sudo -i '
 1. $  `cd /var/ansible-cronjob && source venv/bin/activate' 
-1. $ update the `staticroutes.txt` with routes, you want to convert to json, you will not be able to add static routes manually to switch while this is running, they will be removed automatically. Please make sure to follow the correct syntax where you provide if you want to monitor the route using ansible-playbook or not `check_healthy`
+1. $ update the `staticroutes.txt` with routes, you want to convert to json, you will not be able to add static routes manually to switch while this is running, they will be removed automatically. Please make sure to follow the correct syntax, you can configure if you want to monitor the route using ansible-playbook or not `check_healthy`
 
-1. $ In `staticroutes.yml` update `default_route` and `default_route2` if these are not pingable this who program will not start, make any changes.
+1. $ In `staticroutes.yml` update `default_route` and `default_route2` if these are not pingable this whole program will not start, make any changes.
 Note: IF you have one gateway, set `default_route` and `default_route2` to same ip address
 1. $ Also in `roles/routes-health/tasks/main.yml`  for task 1 and task 2  in list update the VRF in which the default routes reside by default that VRF is set to `VRF_I`
            `script: test.py {{ default_route }} YOURVRFNAMEHERE `
